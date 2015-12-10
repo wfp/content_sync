@@ -1,0 +1,8 @@
+name: Content Sync
+type: module
+description: Tool for syncing content
+core: 8.x
+package: Development
+dependencies:
+  - default_content
+  - menu_ui
