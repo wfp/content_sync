@@ -10,5 +10,17 @@
     "issues": "http://drupal.org/project/issues/content_sync",
     "source": "http://cgit.drupalcode.org/content_sync"
   },
-  "require": { }
+  "require-dev": {
+    "drupal/coder": "8.2.5",
+    "andrewholgate/drupalstrict": "0.1.1",
+    "sebastian/phpcpd": "2.0.2"
+  },
+  "scripts": {
+    "phpcs": "./vendor/bin/phpcs --standard=Drupal,DrupalPractice,DrupalStrict --extensions=php,module,install,profile,drush.inc,test,admin.inc,yml,js,css --report-width=4 --colors --ignore=vendor/ ./",
+    "phpcpd": "./vendor/bin/phpcpd --names *.php,*.module,*.profile,*.install,*.drush.inc,*.test --min-lines 6 --min-tokens 10 --fuzzy --exclude=vendor ./",
+    "audit": "composer run phpcs && composer run phpcpd",
+    "post-install-cmd": [
+      "[ -f ./vendor/bin/phpcs ]; ./vendor/bin/phpcs --config-set installed_paths ../../drupal/coder/coder_sniffer,../../andrewholgate/drupalstrict"
+    ]
+  }
 }
