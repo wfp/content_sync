@@ -16,6 +16,8 @@ command:
                 name: 'Who do you want to greet?'
             options:
                 module_name: 'Choose Module: '
+            summary: 'entities imported'
+            folder_path: 'Please enter the folder path: '
         menu-clear:
             description: 'Delete all menu items from selected menu'
             arguments:

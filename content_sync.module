@@ -58,7 +58,7 @@ function _content_sync_export(
  * Export Taxonomy terms.
  *
  * @param mixed $vid
- *    Vocabulary ID.
+ *       Vocabulary ID.
  * @param string $module_name
  *    Name of the module in which entities will be exported.
  */
@@ -203,9 +203,14 @@ function _content_sync_vocabulary_clear($vid) {
  *
  * @param array $options
  *    Array of options.
+ *
+ * @return int
+ *    number of entities created.
  */
 function _content_sync_import($options) {
   if (!\Drupal::isConfigSyncing()) {
-    \Drupal::service('default_content.manager')->importContent($options);
+    $created = \Drupal::service('default_content.manager')
+      ->importContent($options);
+    return count($created);
   }
 }

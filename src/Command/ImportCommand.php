@@ -37,12 +37,14 @@ class ImportCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $folder = $input->getOption('folder');
+    $folder  = $input->getOption('folder');
     $options = array(
-      'type' => 'folder',
+      'type'        => 'folder',
       'folder_path' => $folder,
     );
-    _content_sync_import($options);
+
+    $output->writeln(_content_sync_import($options) . ' ' . $this->trans('command.content_sync.import.summary'));
+    $output->writeln("No errors");
 
   }
 
@@ -55,7 +57,7 @@ class ImportCommand extends ContainerAwareCommand {
 
     $folder = $input->getOption('folder');
     if (!$folder) {
-      $folder = $dialog->ask($output, "Please enter the folder path: ");
+      $folder = $dialog->ask($output, $this->trans('command.content_sync.import.folder_path'));
     }
 
     $input->setOption('folder', $folder);
