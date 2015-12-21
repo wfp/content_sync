@@ -23,14 +23,37 @@ Thats it, you will find exported JSON files in specified module - `modules/custo
 ### Export Taxonomy Terms
 If you choose `taxonomy_term` from suggested entity types you will get list of vocabularies from which you will choose the vocabulary you want to export.
 After you choose vocabulary you have to input module name in which content will be exported.
-Thats it, you will find exported JSON files in specified module - `modules/custom/{module_name}/content/`
+Thats it, you will find exported JSON files in specified module - `modules/custom/{module_name}/content/`.
+
+Options for basic export:
+
+* content_type - entity type id (machine name) of an entity you want to export.
+* module - Module machine name to which content will be exported.
+
+Options for menu items export:
+
+* content_type - entity type id - `menu_link_content`.
+* module - Module machine name to which content will be exported.
+* menu_name - name of the menu.
+
+Options for menu texonomy terms export:
+
+* content_type - entity type id - `taxonomy_term`.
+* module - Module machine name to which content will be exported.
+* vid - Vocabulary id
+
+
 
 `NOTE:` this only exports Taxonomy terms as vocabularies are handled by CM in core.
 
 
 
 ## Import
-`drupal content_sync:import` - This will import any type of entities generated in JSON format using `drupal content_sync:export`, it will ask module name from which content will be imported. It is expected that JSON files are stored in `content` folder under module.
+`drupal content_sync:import` - This will import any type of entities generated in JSON format using `drupal content_sync:export`, it will ask module name from which content will be imported. It is expected that JSON files are stored in `content/{entity_type_id}` folder under module.
+
+Options for importing:
+
+* folder - path to the folder where JSON files reside.
 
 `NOTE:`
 

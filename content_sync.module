@@ -137,7 +137,7 @@ function _content_sync_export_entity_with_references(
  * @param mixed $menu_name
  *    Machine name of menu.
  */
-function _content_sync_menu_clear($menu_name) {
+function _content_sync_delete_menu_items($menu_name) {
   $query  = \Drupal::entityQuery('menu_link_content')
     ->condition('menu_name', $menu_name)
     ->sort('id', 'ASC');
@@ -164,7 +164,7 @@ function _content_sync_menu_clear($menu_name) {
  * @param mixed $vid
  *    Vocabulary id.
  */
-function _content_sync_vocabulary_clear($vid) {
+function _content_sync_delete_taxonomy_terms($vid) {
   $query  = \Drupal::entityQuery('taxonomy_term')->condition('vid', $vid);
   $result = $query->execute();
 

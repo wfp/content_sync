@@ -58,9 +58,13 @@ class ExportCommand extends ContainerAwareCommand {
         _content_sync_export_menu_items($input->getArgument('menu_name'),
           $input->getOption('module_name'));
         break;
+      case 'taxonomy_term':
+        _content_sync_export_taxonomy_terms($input->getArgument('vid'),
+          $input->getOption('module_name'));
+        break;
 
       default:
-        _content_sync_export_taxonomy_terms($input->getArgument('vid'),
+        _content_sync_export($input->getArgument('entity_type'),
           $input->getOption('module_name'));
     }
 

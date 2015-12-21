@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\content_sync\Command\MenuClearCommand.
+ * Contains \Drupal\content_sync\Command\DeleteMenuItemsCommand.
  */
 
 namespace Drupal\content_sync\Command;
@@ -14,20 +14,20 @@ use Drupal\Console\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Class MenuClearCommand.
+ * Class DeleteMenuItemsCommand.
  *
  * @package Drupal\content_sync
  */
-class MenuClearCommand extends ContainerAwareCommand {
+class DeleteMenuItemsCommand extends ContainerAwareCommand {
 
   /**
    * {@inheritdoc}
    */
   protected function configure() {
-    $this->setName('content_sync:menu-clear')
-      ->setDescription($this->trans('command.content_sync.menu-clear.description'))
+    $this->setName('content_sync:delete-menu-items')
+      ->setDescription($this->trans('command.content_sync.delete-menu-items.description'))
       ->addArgument('menu_name', InputArgument::REQUIRED,
-        $this->trans('command.content_sync.menu-clear.arguments.menu_name'));
+        $this->trans('command.content_sync.delete-menu-items.arguments.menu_name'));
   }
 
 
@@ -35,8 +35,8 @@ class MenuClearCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    _content_sync_menu_clear($input->getArgument('menu_name'));
-    $output->writeln("Menu " . $input->getArgument('menu_name') . " Cleared!");
+    _content_sync_delete_menu_items($input->getArgument('menu_name'));
+    $output->writeln("Menu items deleted!");
   }
 
   /**

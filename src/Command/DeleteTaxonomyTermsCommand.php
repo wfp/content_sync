@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\content_sync\Command\VocabularyClearCommand.
+ * Contains \Drupal\content_sync\Command\DeleteTaxonomyTermsCommand.
  */
 
 namespace Drupal\content_sync\Command;
@@ -14,19 +14,19 @@ use Drupal\Console\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Class VocabularyClearCommand.
+ * Class DeleteTaxonomyTermsCommand.
  *
  * @package Drupal\content_sync
  */
-class VocabularyClearCommand extends ContainerAwareCommand {
+class DeleteTaxonomyTermsCommand extends ContainerAwareCommand {
   /**
    * {@inheritdoc}
    */
   protected function configure() {
-    $this->setName('content_sync:vocabulary-clear')
-      ->setDescription($this->trans('command.content_sync.vocabulary-clear.description'))
+    $this->setName('content_sync:delete-taxonomy-terms')
+      ->setDescription($this->trans('command.content_sync.delete-taxonomy-terms.description'))
       ->addArgument('vid', InputArgument::REQUIRED,
-        $this->trans('command.content_sync.vocabulary-clear.arguments.vid'));
+        $this->trans('command.content_sync.delete-taxonomy-terms.arguments.vid'));
   }
 
 
@@ -34,8 +34,8 @@ class VocabularyClearCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    _content_sync_vocabulary_clear($input->getArgument('vid'));
-    $output->writeln("Vocabulary " . $input->getArgument('vid') . " Cleared!");
+    _content_sync_delete_taxonomy_terms($input->getArgument('vid'));
+    $output->writeln("Terms deleted!");
   }
 
   /**

@@ -18,12 +18,12 @@ command:
                 module_name: 'Choose Module: '
             summary: 'entities imported'
             folder_path: 'Please enter the folder path: '
-        menu-clear:
+        delete-menu-items:
             description: 'Delete all menu items from selected menu'
             arguments:
                 menu_name: 'Choose Menu'
-        vocabulary-clear:
-            description: 'Greet someone'
+        delete-texonomy-terms:
+            description: 'Deletes taxonomy terms from specified vocabulary'
             arguments:
                 name: 'Who do you want to greet?'
             options:
