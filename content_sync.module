@@ -11,25 +11,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * Implements hook_help().
  */
 function content_sync_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    // Main module help for the menu_links_to_config module.
-    case 'help.page.content_sync':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Tool for syncing entities') . '</p>';
-      return $output;
-
-    default:
+  if ($route_name === "help.page.content_sync") {
+    $output = '<p>' . t('Tool for syncing entities.') . '</p>';
+    return $output;
   }
-}
-
-/**
- * Implements hook_theme().
- */
-function content_sync_theme() {
-  $theme = [];
-
-  return $theme;
 }
 
 /**
@@ -58,7 +43,7 @@ function _content_sync_export(
  * Export Taxonomy terms.
  *
  * @param mixed $vid
- *       Vocabulary ID.
+ *    Vocabulary ID.
  * @param string $module_name
  *    Name of the module in which entities will be exported.
  */
