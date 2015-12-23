@@ -53,7 +53,7 @@ Options for menu texonomy terms export:
 
 Options for importing:
 
-* folder - path to the folder where JSON files reside.
+* folder - path to the `content` folder (e.g. path/to/module/root/content).
 
 `NOTE:`
 
