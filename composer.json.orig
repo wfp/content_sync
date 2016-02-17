@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "wfp/content_sync",
   "version": "0.0.1",
   "type": "drupal-module",
@@ -14,6 +15,19 @@
   "license": "GPL-2.0+",
   "homepage": "https://github.com/wfp/content_sync",
   "minimum-stability": "dev",
+  "require": { }
+=======
+  "name": "drupal/content_sync",
+  "type": "drupal-module",
+  "description": "Tool for syncing entities",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "http://drupal.org/project/content_sync",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/content_sync",
+    "source": "http://cgit.drupalcode.org/content_sync"
+  },
   "require-dev": {
     "drupal/coder": "8.2.5",
     "andrewholgate/drupalstrict": "0.1.1",
@@ -27,4 +41,5 @@
       "[ -f ./vendor/bin/phpcs ]; ./vendor/bin/phpcs --config-set installed_paths ../../drupal/coder/coder_sniffer,../../andrewholgate/drupalstrict"
     ]
   }
+>>>>>>> feature/qa-tools
 }

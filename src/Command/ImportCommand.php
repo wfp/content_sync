@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Command\ContainerAwareCommand;
 use Drupal\Console\Command\moduleTrait;
+use Symfony\Component\Console\Question\Question;
+use Drupal\Console\Helper\DialogHelper;
 
 /**
  * Class ImportCommand.
@@ -42,6 +44,7 @@ class ImportCommand extends ContainerAwareCommand {
       'type'        => 'folder',
       'folder_path' => $folder,
     );
+    _content_sync_import($options);
 
     $output->writeln(_content_sync_import($options) . ' ' . $this->trans('command.content_sync.import.summary'));
     $output->writeln("No errors");
@@ -54,6 +57,7 @@ class ImportCommand extends ContainerAwareCommand {
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
     $dialog = $this->getDialogHelper();
+    $question = $this->getQuestionHelper();
 
     $folder = $input->getOption('folder');
     if (!$folder) {

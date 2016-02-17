@@ -11,13 +11,27 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * Implements hook_help().
  */
 function content_sync_help($route_name, RouteMatchInterface $route_match) {
+<<<<<<< HEAD
   if ($route_name === "help.page.content_sync") {
     $output = '<p>' . t('Tool for syncing entities.') . '</p>';
     return $output;
+=======
+  switch ($route_name) {
+    // Main module help for the menu_links_to_config module.
+    case 'help.page.content_sync':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Tool for syncing entities') . '</p>';
+      return $output;
+
+    default:
+>>>>>>> feature/qa-tools
   }
 }
 
 /**
+<<<<<<< HEAD
+=======
  * Implements hook_theme().
  */
 function content_sync_theme() {
@@ -27,6 +41,7 @@ function content_sync_theme() {
 }
 
 /**
+>>>>>>> feature/qa-tools
  * Queries entities by type ID and exports them into specified module folder.
  *
  * @param string $entity_type_id
@@ -146,7 +161,11 @@ function _content_sync_export_entity_with_references(
  * @param mixed $menu_name
  *    Machine name of menu.
  */
+<<<<<<< HEAD
+function _content_sync_delete_menu_items($menu_name) {
+=======
 function _content_sync_menu_clear($menu_name) {
+>>>>>>> feature/qa-tools
   $query  = \Drupal::entityQuery('menu_link_content')
     ->condition('menu_name', $menu_name)
     ->sort('id', 'ASC');
@@ -173,7 +192,11 @@ function _content_sync_menu_clear($menu_name) {
  * @param mixed $vid
  *    Vocabulary id.
  */
+<<<<<<< HEAD
+function _content_sync_delete_taxonomy_terms($vid) {
+=======
 function _content_sync_vocabulary_clear($vid) {
+>>>>>>> feature/qa-tools
   $query  = \Drupal::entityQuery('taxonomy_term')->condition('vid', $vid);
   $result = $query->execute();
 
@@ -197,6 +220,7 @@ function _content_sync_vocabulary_clear($vid) {
  *
  * @param array $options
  *    Array of options.
+<<<<<<< HEAD
  *
  * @return int
  *    number of entities created.
@@ -206,5 +230,11 @@ function _content_sync_import($options) {
     $created = \Drupal::service('default_content.manager')
       ->importContent($options);
     return count($created);
+=======
+ */
+function _content_sync_import($options) {
+  if (!\Drupal::isConfigSyncing()) {
+    \Drupal::service('default_content.manager')->importContent($options);
+>>>>>>> feature/qa-tools
   }
 }

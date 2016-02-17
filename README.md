@@ -10,6 +10,7 @@ Install it as any other Drupal module - [Installing contributed modules (Drupal 
 
 This module uses `Drupal Console` so yoi need to have it installed too.
 
+
 ## Export
 `drupal content_sync:export` - This is for all types of entities, it's an interactive wizard which will ask you to input entity type from suggested list of entities.
 
@@ -23,6 +24,7 @@ Thats it, you will find exported JSON files in specified module - `modules/custo
 ### Export Taxonomy Terms
 If you choose `taxonomy_term` from suggested entity types you will get list of vocabularies from which you will choose the vocabulary you want to export.
 After you choose vocabulary you have to input module name in which content will be exported.
+
 Thats it, you will find exported JSON files in specified module - `modules/custom/{module_name}/content/`.
 
 Options for basic export:
@@ -62,11 +64,32 @@ It will try to import any JSON file found int `content` folder, so be careful an
 E.g. if you want to import menu items make sure that menu is already empty to prevent conflicting `uuid`s.
 
 
+## Clearing commands
+
+There are 2 clearing commands implemented for now:
+
+* `drupal content_sync:vocabulary-clear`
+* `drupal content_sync:clear-menu`
 
 
-## Delete
+## Development Tools
 
-There are 2 delete commands:
+### Install
 
-* `drupal content_sync:delete-taxonomy-terms`
-* `drupal content_sync:delete-menu-items`
+```bash
+composer install
+```
+
+### Usage
+
+```bash
+# PHP Code standards audit (Coder, DrupalStrict, etc.)
+composer run phpcs
+
+# PHP Copy-paste detection
+composer run phpcpd
+
+# Run all code audits
+composer run audit
+```
+
