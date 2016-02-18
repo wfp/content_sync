@@ -7,7 +7,9 @@
 
 namespace Drupal\content_sync\Command;
 
-use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Command\Command;
+
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,7 +22,7 @@ use Drupal\Console\Command\moduleTrait;
  *
  * @package Drupal\content_sync
  */
-class ExportCommand extends ContainerAwareCommand {
+class ExportCommand extends Command {
 
   use moduleTrait;
 
@@ -58,6 +60,7 @@ class ExportCommand extends ContainerAwareCommand {
         _content_sync_export_menu_items($input->getArgument('menu_name'),
           $input->getOption('module_name'));
         break;
+
       case 'taxonomy_term':
         _content_sync_export_taxonomy_terms($input->getArgument('vid'),
           $input->getOption('module_name'));
@@ -76,7 +79,8 @@ class ExportCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $question = $this->getQuestionHelper();
+
+    $question = new QuestionHelper();
     $entities = $this->getEntityTypes();
 
     $entity_type = $question->ask($input, $output,
@@ -103,7 +107,7 @@ class ExportCommand extends ContainerAwareCommand {
         break;
     }
 
-    $dialog      = $this->getDialogHelper();
+    $dialog      = new QuestionHelper();
     $module_name = $input->getOption('module_name');
     if (!$module_name) {
       // @see Drupal\Console\Command\module_nameTrait::module_nameQuestion

@@ -7,20 +7,20 @@
 
 namespace Drupal\content_sync\Command;
 
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Command\Command;
 use Drupal\Console\Command\moduleTrait;
 use Symfony\Component\Console\Question\Question;
-use Drupal\Console\Helper\DialogHelper;
 
 /**
  * Class ImportCommand.
  *
  * @package Drupal\content_sync
  */
-class ImportCommand extends ContainerAwareCommand {
+class ImportCommand extends Command {
 
   use moduleTrait;
 
@@ -39,14 +39,9 @@ class ImportCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $folder  = $input->getOption('folder');
-    $options = array(
-      'type'        => 'folder',
-      'folder_path' => $folder,
-    );
-    _content_sync_import($options);
+    $folder = $input->getOption('folder');
 
-    $output->writeln(_content_sync_import($options) . ' ' . $this->trans('command.content_sync.import.summary'));
+    $output->writeln(_content_sync_import($folder) . ' ' . $this->trans('command.content_sync.import.summary'));
     $output->writeln("No errors");
 
   }
@@ -56,12 +51,12 @@ class ImportCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $dialog = $this->getDialogHelper();
-    $question = $this->getQuestionHelper();
+    $dialog = new QuestionHelper();
 
     $folder = $input->getOption('folder');
     if (!$folder) {
-      $folder = $dialog->ask($output, $this->trans('command.content_sync.import.folder_path'));
+      $folder = $dialog->ask($input, $output,
+        new Question($this->trans('command.content_sync.import.folder_path')));
     }
 
     $input->setOption('folder', $folder);

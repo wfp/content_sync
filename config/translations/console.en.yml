@@ -24,9 +24,7 @@ command:
                 menu_name: 'Choose Menu'
         delete-texonomy-terms:
             description: 'Deletes taxonomy terms from specified vocabulary'
-        menu-clear:
-            description: 'Delete all menu items from selected menu'
             arguments:
-                menu_name: 'Choose Menu'
-        vocabulary-clear:
-            description: 'Greet someone'
+                name: 'Who do you want to greet?'
+            options:
+                yell: 'If set, the task will yell in uppercase letters'

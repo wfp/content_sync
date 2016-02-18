@@ -141,39 +141,12 @@ function _content_sync_export_entity_with_references(
 }
 
 /**
- * Deletes menu links.
- *
- * @param mixed $menu_name
- *    Machine name of menu.
- */
-function _content_sync_menu_clear($menu_name) {
-  $query  = \Drupal::entityQuery('menu_link_content')
-    ->condition('menu_name', $menu_name)
-    ->sort('id', 'ASC');
-  $result = $query->execute();
-
-  if (!empty($result)) {
-    $entities           = \Drupal::entityManager()
-      ->getStorage('menu_link_content')
-      ->loadMultiple(array_values($result));
-    $entities_to_delete = array();
-    foreach ($entities as $entity) {
-      $entities_to_delete[$entity->id()] = $entity;
-    }
-
-    \Drupal::entityTypeManager()
-      ->getStorage('menu_link_content')
-      ->delete($entities_to_delete);
-  }
-}
-
-/**
  * Deletes taxonomy terms links.
  *
  * @param mixed $vid
  *    Vocabulary id.
  */
-function _content_sync_vocabulary_clear($vid) {
+function _content_sync_delete_taxonomy_terms($vid) {
   $query  = \Drupal::entityQuery('taxonomy_term')->condition('vid', $vid);
   $result = $query->execute();
 
@@ -193,18 +166,45 @@ function _content_sync_vocabulary_clear($vid) {
 }
 
 /**
+ * Deletes menu links.
+ *
+ * @param mixed $menu_name
+ *    Machine name of menu.
+ */
+function _content_sync_delete_menu_items($menu_name) {
+  $query  = \Drupal::entityQuery('menu_link_content')
+    ->condition('menu_name', $menu_name);
+  $result = $query->execute();
+
+  if (!empty($result)) {
+    $entities           = \Drupal::entityManager()
+      ->getStorage('menu_link_content')
+      ->loadMultiple(array_values($result));
+    $entities_to_delete = array();
+    foreach ($entities as $entity) {
+      $entities_to_delete[$entity->id()] = $entity;
+    }
+
+    \Drupal::entityTypeManager()
+      ->getStorage('menu_link_content')
+      ->delete($entities_to_delete);
+  }
+}
+
+/**
  * Import entities from module.
  *
- * @param array $options
- *    Array of options.
+ * @param string $folder
+ *    Path to the content.
  *
  * @return int
  *    number of entities created.
  */
-function _content_sync_import($options) {
+function _content_sync_import($folder) {
   if (!\Drupal::isConfigSyncing()) {
     $created = \Drupal::service('default_content.manager')
-      ->importContent($options);
+      ->importContentFromFolder($folder);
+
     return count($created);
   }
 }
