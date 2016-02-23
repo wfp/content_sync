@@ -35,16 +35,15 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
   public function exportContentToFolder($folder, $entity_type_id, $entity_bundle_id = NULL) {
     $serialized_by_type = $this->getSerializedEntities($entity_type_id);
     foreach ($serialized_by_type as $entity_type_id => $serialized_entities) {
-      $bundle_key = $this->entityManager->getDefinition($entity_type_id)->getKeys()['bundle'];
-      /** @var \Drupal\Core\Entity\EntityInterface $entity */
-      foreach ($serialized_entities as $entity) {
+      foreach ($serialized_entities as $entity_uuid => $serialized_entity) {
+        $entity_bundle = $this->getSerializedEntityBundle($serialized_entity);
         // Ensure that the folder per entity type exists.
-//          $entity_type_folder = "$folder/$entity_type_id/$entity_bundle";
-//          file_prepare_directory($entity_type_folder, FILE_CREATE_DIRECTORY);
-//          file_put_contents($entity_type_folder . '/' . $entity_id . '.json', $serialized_entity);
+        $entity_type_folder = "$folder/$entity_type_id/$entity_bundle";
+        file_prepare_directory($entity_type_folder, FILE_CREATE_DIRECTORY);
+        file_put_contents($entity_type_folder . '/' . $entity_uuid . '.json', $serialized_entity);
       }
     }
-
+    return $serialized_by_type;
   }
 
   /**
@@ -54,16 +53,31 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
    *    Entity type ID.
    *
    * @return array[][]
-   *    Array of encoded entities, keyed by entity type ID and UUID.
+   *    Array of serialized entities, keyed by entity type ID and UUID.
    */
   private function getSerializedEntities($entity_type_id) {
     $return = [];
     $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple();
     foreach ($entities as $entity) {
       $referenced_entities = $this->exportContentWithReferences($entity_type_id, $entity->id());
-      $return = array_merge($return, $referenced_entities);
+      $return = array_merge_recursive($return, $referenced_entities);
     }
     return $return;
+  }
+
+  /**
+   * Return serialized entity bundle.
+   *
+   * @param string $serialized_entity
+   *    Serialized entity.
+   *
+   * @return string
+   *    Bundle ID.
+   */
+  private function getSerializedEntityBundle($serialized_entity) {
+    $data = $this->serializer->decode($serialized_entity, 'hal_json');
+    $parts = explode('/', $data['_links']['type']['href']);
+    return array_pop($parts);
   }
 
   /**
