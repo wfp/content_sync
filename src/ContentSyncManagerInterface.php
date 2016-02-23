@@ -7,8 +7,6 @@
 
 namespace Drupal\content_sync;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Interface ContentSyncManagerInterface.
  *
@@ -22,7 +20,7 @@ interface ContentSyncManagerInterface {
    * @param string $folder
    *    Path to default content folder.
    *
-   * @return EntityInterface[]
+   * @return \Drupal\Core\Entity\EntityInterface[]
    *    Array of created entities.
    */
   public function importContentFromFolder($folder, $update_existing = FALSE);
@@ -32,7 +30,7 @@ interface ContentSyncManagerInterface {
    *
    * @param string $folder
    *    Root folder where to export content to.
-   * @param $entity_type_id
+   * @param string $entity_type_id
    *    Entity type to export.
    *
    * @return array[][]

@@ -7,14 +7,8 @@
 
 namespace Drupal\content_sync\Command;
 
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\Command;
-use Drupal\Console\Command\moduleTrait;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Class ImportCommand.

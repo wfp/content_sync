@@ -8,7 +8,6 @@
 namespace Drupal\content_sync\Command;
 
 use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\content_sync\ContentSyncManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -21,7 +20,7 @@ abstract class AbstractCommand extends ContainerAwareCommand {
   /**
    * Content manager service.
    *
-   * @var ContentSyncManagerInterface
+   * @var \Drupal\content_sync\ContentSyncManagerInterface
    */
   protected $contentManager = NULL;
 

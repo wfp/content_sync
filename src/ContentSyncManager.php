@@ -43,13 +43,14 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
         file_put_contents($entity_type_folder . '/' . $entity_uuid . '.json', $serialized_entity);
       }
     }
+
     return $serialized_by_type;
   }
 
   /**
    * Return serialized entities, along with their references.
    *
-   * @param $entity_type_id
+   * @param string $entity_type_id
    *    Entity type ID.
    *
    * @return array[][]
@@ -62,6 +63,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
       $referenced_entities = $this->exportContentWithReferences($entity_type_id, $entity->id());
       $return = array_merge_recursive($return, $referenced_entities);
     }
+
     return $return;
   }
 
@@ -88,6 +90,8 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
    *    List of created entities.
+   *
+   * @link https://www.drupal.org/node/2640734#comment-10699416
    */
   public function createEntities($update_existing = FALSE) {
     $created = array();
@@ -104,12 +108,12 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
         $entity         = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
         $entity->enforceIsNew(TRUE);
         // Allow existing entities overwrite.
-        // More info at: https://www.drupal.org/node/2640734#comment-10699416
         $existing_entity = $this->entityRepository->loadEntityByUuid($entity_type_id, $entity->uuid());
         if ($update_existing && $existing_entity) {
           // Delete first an existing entity with the same uuid.
           $existing_entity->delete();
         }
+
         if (!$existing_entity || $update_existing) {
           $entity->save();
           $created[$entity->uuid()] = $entity;
@@ -123,4 +127,5 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $this->linkManager->setLinkDomain(FALSE);
     return $created;
   }
+
 }
