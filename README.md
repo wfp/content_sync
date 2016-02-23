@@ -8,8 +8,8 @@ This module exposes [Drupal Console](https://drupalconsole.com/) commands. There
 # Installation
 Install it as any other Drupal module - [Installing contributed modules (Drupal 8)](https://www.drupal.org/documentation/install/modules-themes/modules-8)
 
-This module uses `Drupal Console` so yoi need to have it installed too.
-
+This module depends on [Default Content](https://www.drupal.org/project/default_content)
+patched as per https://www.drupal.org/node/2631618#comment-10881452.
 
 ## Export
 `drupal content_sync:export` - This is for all types of entities, it's an interactive wizard which will ask you to input entity type from suggested list of entities.

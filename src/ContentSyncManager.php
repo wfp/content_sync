@@ -24,7 +24,7 @@ class ContentSyncManager extends DefaultContentManager {
   public function importContent($folder, $update_existing = FALSE) {
     // We fully scan the provided folder without discriminating per entity type.
     $this->buildGraph($folder);
-    $entities = $this->syncEntities($update_existing);
+    $entities = $this->createEntities($update_existing);
     $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportFromFolderEvent($entities, $folder));
     return $entities;
   }
@@ -38,7 +38,7 @@ class ContentSyncManager extends DefaultContentManager {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
    *    List of created entities.
    */
-  public function syncEntities($update_existing = FALSE) {
+  public function createEntities($update_existing = FALSE) {
     $created = array();
 
     $sorted = $this->sortTree($this->graph);
@@ -63,8 +63,6 @@ class ContentSyncManager extends DefaultContentManager {
           $entity->save();
           $created[$entity->uuid()] = $entity;
         }
-        $entity->save();
-        $created[$entity->uuid()] = $entity;
       }
     }
 
