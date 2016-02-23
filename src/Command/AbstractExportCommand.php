@@ -7,34 +7,31 @@
 
 namespace Drupal\content_sync\Command;
 
-use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\content_sync\ContentSyncManagerInterface;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class AbstractExportCommand.
  *
  * @package Drupal\content_sync\Command
  */
-abstract class AbstractExportCommand extends ContainerAwareCommand {
-
-  /**
-   * Content manager service.
-   *
-   * @var ContentSyncManagerInterface
-   */
-  protected $contentManager = NULL;
+abstract class AbstractExportCommand extends AbstractCommand implements ExportCommandInterface {
 
   /**
    * {@inheritdoc}
    */
   protected function configure() {
     parent::configure();
-    $this->contentManager = $this->getService('content_sync.manager');
-    $this->addArgument('folder', NULL, InputArgument::REQUIRED, '.')
-      ->addOption('bundle', NULL, InputOption::VALUE_OPTIONAL,
-        $this->trans('command.content_sync.export.options.bundle'));
+    $this->addOption('bundle', 'b', InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.bundle'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function execute(InputInterface $input, OutputInterface $output) {
+    $this->contentManager->exportContentToFolder($input->getArgument('folder'), $this->getEntityTypeId());
+    $output->writeln("Content exported to " . $input->getArgument('folder'), OutputInterface::OUTPUT_NORMAL);
   }
 
 }

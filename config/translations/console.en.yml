@@ -1,12 +1,10 @@
 command:
     content-sync:
+        arguments:
+            folder: 'Root folder where to import/export content.'
         export:
-            description: 'Export entities given a filesystem location. Directory structure will be "{root}/{entity_type}/{entity_bundle}".'
-            arguments:
-                folder: 'Root folder where to export content.'
+            description: 'Export entities given a filesystem location as "{root}/{entity_type}/{entity_bundle}".'
             options:
                 bundle: 'Export only entities of specified bundle (optional).'
         import:
             description: 'Import content given from a given filesystem location.'
-            arguments:
-                folder: 'Root folder from where to import content.'

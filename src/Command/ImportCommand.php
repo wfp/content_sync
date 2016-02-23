@@ -27,7 +27,7 @@ class ImportCommand extends AbstractCommand {
    * {@inheritdoc}
    */
   protected function configure() {
-    $this->setName('content-sync:import')->setDescription($this->trans('command.content_sync.import.description'));
+    $this->setName('content-sync:import')->setDescription($this->trans('command.content-sync.import.description'));
   }
 
   /**
