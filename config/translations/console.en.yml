@@ -1,30 +1,12 @@
 command:
-    content_sync:
+    content-sync:
         export:
-            description: 'Export entities from database to JSON files'
+            description: 'Export entities given a filesystem location. Directory structure will be "{root}/{entity_type}/{entity_bundle}".'
             arguments:
-                entity_type: 'Choose Entity Type: '
-                menu_name: 'Choose menu: '
-                vid: 'Choose vocabulary: '
-                folder: 'Custom module path where exported files will be generated: '
+                folder: 'Root folder where to export content.'
             options:
-                bundle: 'type bundle type id (optional)'
-                module_name: 'Choose Module: '
+                bundle: 'Export only entities of specified bundle (optional).'
         import:
-            description: 'Import menu items stored in module_root/content'
+            description: 'Import content given from a given filesystem location.'
             arguments:
-                name: 'Who do you want to greet?'
-            options:
-                module_name: 'Choose Module: '
-            summary: 'entities imported'
-            folder_path: 'Please enter the folder path: '
-        delete-menu-items:
-            description: 'Delete all menu items from selected menu'
-            arguments:
-                menu_name: 'Choose Menu'
-        delete-texonomy-terms:
-            description: 'Deletes taxonomy terms from specified vocabulary'
-            arguments:
-                name: 'Who do you want to greet?'
-            options:
-                yell: 'If set, the task will yell in uppercase letters'
+                folder: 'Root folder from where to import content.'

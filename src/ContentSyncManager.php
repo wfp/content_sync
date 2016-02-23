@@ -16,17 +16,54 @@ use Drupal\default_content\Event\ImportFromFolderEvent;
  *
  * @package Drupal\default_content
  */
-class ContentSyncManager extends DefaultContentManager {
+class ContentSyncManager extends DefaultContentManager implements ContentSyncManagerInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function importContent($folder, $update_existing = FALSE) {
+  public function importContentFromFolder($folder, $update_existing = FALSE) {
     // We fully scan the provided folder without discriminating per entity type.
     $this->buildGraph($folder);
     $entities = $this->createEntities($update_existing);
     $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportFromFolderEvent($entities, $folder));
     return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function exportContentToFolder($folder, $entity_type_id, $entity_bundle_id = NULL) {
+    $serialized_by_type = $this->getSerializedEntities($entity_type_id);
+    foreach ($serialized_by_type as $entity_type_id => $serialized_entities) {
+      $bundle_key = $this->entityManager->getDefinition($entity_type_id)->getKeys()['bundle'];
+      /** @var \Drupal\Core\Entity\EntityInterface $entity */
+      foreach ($serialized_entities as $entity) {
+        // Ensure that the folder per entity type exists.
+//          $entity_type_folder = "$folder/$entity_type_id/$entity_bundle";
+//          file_prepare_directory($entity_type_folder, FILE_CREATE_DIRECTORY);
+//          file_put_contents($entity_type_folder . '/' . $entity_id . '.json', $serialized_entity);
+      }
+    }
+
+  }
+
+  /**
+   * Return serialized entities, along with their references.
+   *
+   * @param $entity_type_id
+   *    Entity type ID.
+   *
+   * @return array[][]
+   *    Array of encoded entities, keyed by entity type ID and UUID.
+   */
+  private function getSerializedEntities($entity_type_id) {
+    $return = [];
+    $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple();
+    foreach ($entities as $entity) {
+      $referenced_entities = $this->exportContentWithReferences($entity_type_id, $entity->id());
+      $return = array_merge($return, $referenced_entities);
+    }
+    return $return;
   }
 
   /**
