@@ -30,7 +30,7 @@ abstract class AbstractCommand extends ContainerAwareCommand {
    */
   protected function configure() {
     $this->contentManager = $this->getService('content_sync.manager');
-    $this->addArgument('folder', InputArgument::OPTIONAL, $this->trans('command.content-sync.arguments.folder'), '.');
+    $this->addArgument('folder', InputArgument::REQUIRED, $this->trans('command.content-sync.arguments.folder'));
   }
 
 }
