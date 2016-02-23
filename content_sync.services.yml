@@ -1,0 +1,4 @@
+services:
+  content_sync.manager:
+    class: Drupal\content_sync\ContentSyncManager
+    arguments: ['@serializer', '@plugin.manager.rest', '@current_user', '@entity_type.manager', '@entity.repository', '@rest.link_manager', '@event_dispatcher', '@module_handler', '@info_parser']
