@@ -60,10 +60,12 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $return = [];
     $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple();
     foreach ($entities as $entity) {
-      $referenced_entities = $this->exportContentWithReferences($entity_type_id, $entity->id());
-      $return = array_merge_recursive($return, $referenced_entities);
+      foreach ($this->exportContentWithReferences($entity_type_id, $entity->id()) as $type => $list) {
+        foreach ($list as $uuid => $content) {
+          $return[$type][$uuid] = $content;
+        }
+      }
     }
-
     return $return;
   }
 
