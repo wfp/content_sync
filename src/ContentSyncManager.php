@@ -7,7 +7,6 @@
 
 namespace Drupal\content_sync;
 
-use Drupal\Core\Entity\Query\Sql\Condition;
 use Drupal\default_content\DefaultContentManager;
 use Drupal\default_content\Event\DefaultContentEvents;
 use Drupal\default_content\Event\ImportFromFolderEvent;
@@ -26,8 +25,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     // We fully scan the provided folder without discriminating per entity type.
     $this->buildGraph($folder);
     $entities = $this->createEntities($update_existing);
-    $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT,
-      new ImportFromFolderEvent($entities, $folder));
+    $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportFromFolderEvent($entities, $folder));
     return $entities;
   }
 
@@ -35,48 +33,48 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
   /**
    * {@inheritdoc}
    */
-  public function exportContentToFolder(
-    $folder,
-    $entity_type_id,
-    $conditions_string
-  ) {
-    $condition = null;
-    if($conditions_string){
-      $condition          = $this->getConditionInstanceFromConditionsString($conditions_string);
+  public function exportContentToFolder($folder, $entity_type_id, $conditions_string) {
+    $condition = NULL;
+    if ($conditions_string) {
+      $condition = $this->getConditionInstanceFromConditionsString($conditions_string);
     }
-    $serialized_by_type = $this->getSerializedEntities($entity_type_id,
-      $condition);
+
+    $serialized_by_type = $this->getSerializedEntities($entity_type_id, $condition);
     foreach ($serialized_by_type as $entity_type_id => $serialized_entities) {
       foreach ($serialized_entities as $entity_uuid => $serialized_entity) {
         $entity_bundle = $this->getSerializedEntityBundle($serialized_entity);
         // Ensure that the folder per entity type exists.
         $entity_type_folder = "$folder/$entity_type_id/$entity_bundle";
         file_prepare_directory($entity_type_folder, FILE_CREATE_DIRECTORY);
-        file_put_contents($entity_type_folder . '/' . $entity_uuid . '.json',
-          $serialized_entity);
+        file_put_contents($entity_type_folder . '/' . $entity_uuid . '.json', $serialized_entity);
       }
     }
 
     return $serialized_by_type;
   }
 
-
+  /**
+   * Parse condition argument.
+   *
+   * @param string $conditions_string
+   *    Condition string.
+   *
+   * @return \Drupal\content_sync\Condition
+   *    Condition instance derived from condition string.
+   */
   public function getConditionInstanceFromConditionsString($conditions_string) {
-    $values    = explode(',', $conditions_string);
-    $condition = new \Drupal\content_sync\Condition($values[0], $values[1],
-      $values[2], $values[3]);
-
+    $values = explode(',', $conditions_string);
+    $condition = new \Drupal\content_sync\Condition($values[0], $values[1], $values[2], $values[3]);
     return $condition;
   }
-
 
   /**
    * Return serialized entities, along with their references.
    *
    * @param string $entity_type_id
    *    Entity type ID.
-   *
-   * @param object  $conditions
+   * @param object $condition
+   *   of Drupal\content_sync\Condition objects.
    *    Instance of Drupal\content_sync\Condition objects.
    *
    * @return array[][]
@@ -86,18 +84,14 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $return = [];
 
     if (empty($condition)) {
-      $entities = $this->entityTypeManager->getStorage($entity_type_id)
-        ->loadMultiple();
+      $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple();
     }
     else {
-      $query = $this->entityTypeManager->getStorage($entity_type_id)
-        ->getQuery();
-      $query->condition($condition->field, $condition->value,
-        $condition->operator, $condition->langcode);
+      $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery();
+      $query->condition($condition->field, $condition->value, $condition->operator, $condition->langcode);
 
       $entities_ids = $query->execute();
-      $entities     = $this->entityTypeManager->getStorage($entity_type_id)
-        ->loadMultiple($entities_ids);
+      $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple($entities_ids);
     }
 
     foreach ($entities as $entity) {
@@ -108,9 +102,9 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
         }
       }
     }
+
     return $return;
   }
-
 
   /**
    * Return serialized entity bundle.
@@ -126,7 +120,6 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $parts = explode('/', $data['_links']['type']['href']);
     return array_pop($parts);
   }
-
 
   /**
    * Create entities given a pre-populated graph and file map.
@@ -151,8 +144,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
         $definition     = $resource->getPluginDefinition();
         $contents       = $this->parseFile($file);
         $class          = $definition['serialization_class'];
-        $entity         = $this->serializer->deserialize($contents, $class,
-          'hal_json', array('request_method' => 'POST'));
+        $entity         = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
         $entity->enforceIsNew(TRUE);
         // Allow existing entities overwrite.
         $existing_entity = $this->entityRepository->loadEntityByUuid($entity_type_id,
