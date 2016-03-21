@@ -2,6 +2,7 @@ command:
     content-sync:
         arguments:
             folder: 'Root folder where to import/export content.'
+            conditions_string: 'Argument for storage condition in following format "field_name,value,operator,langcode"'
         export:
             description: 'Export entities given a filesystem location as "{root}/{entity_type}/{entity_bundle}".'
             options:
