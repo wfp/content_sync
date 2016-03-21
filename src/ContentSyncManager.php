@@ -58,7 +58,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
    */
   private function getSerializedEntities($entity_type_id) {
     $return = [];
-    $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple();
+    $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple();
     foreach ($entities as $entity) {
       foreach ($this->exportContentWithReferences($entity_type_id, $entity->id()) as $type => $list) {
         foreach ($list as $uuid => $content) {
