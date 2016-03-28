@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Implements hook_ENTITY_TYPE_storage_load().
+ */
+function content_sync_taxonomy_term_storage_load(array $entities) {
+  // Attach taxonomy term parents to "parent" field.
+  // This is necessary until https://www.drupal.org/node/2543726 gets in.
+  // Check http://codeassist.wfp.org/jira/browse/GO-4 for further information.
+  /* @var \Drupal\taxonomy\TermStorage $storage */
+  $storage = \Drupal::service('entity.manager')->getStorage('taxonomy_term');
+
+  /* @var \Drupal\taxonomy\Entity\Term $entity */
+  foreach ($entities as $entity) {
+    /* @var \Drupal\taxonomy\Entity\Term $parent_entity */
+    foreach ($storage->loadParents($entity->id()) as $parent_entity) {
+      $entity->set('parent', ['target_id' => $parent_entity->id()]);
+    }
+  }
+}
