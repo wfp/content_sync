@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4cce6727192e1ac90487275060fb1191",
-    "content-hash": "9d12cb384b1f42f4e7c955c149de0639",
+    "hash": "6cf5d4cab203cd432009fda4fd976317",
+    "content-hash": "27438f4dd241a49d5bd92bdde499cecb",
     "packages": [],
     "packages-dev": [
         {
@@ -60,6 +60,12 @@
                 "type": "git",
                 "url": "https://github.com/klausi/coder.git",
                 "reference": "9ced5f2ad0e77534f6d53c8db43e6c6c3fe1b482"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klausi/coder/zipball/9ced5f2ad0e77534f6d53c8db43e6c6c3fe1b482",
+                "reference": "9ced5f2ad0e77534f6d53c8db43e6c6c3fe1b482",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.2.0",
@@ -254,15 +260,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "58470a6685844a1c5e3c876d89708f7c219f3874"
+                "reference": "1bcdf03b068a530ac1962ce671dead356eeba43b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/58470a6685844a1c5e3c876d89708f7c219f3874",
-                "reference": "58470a6685844a1c5e3c876d89708f7c219f3874",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/1bcdf03b068a530ac1962ce671dead356eeba43b",
+                "reference": "1bcdf03b068a530ac1962ce671dead356eeba43b",
                 "shasum": ""
             },
             "require": {
+                "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
                 "php": ">=5.1.2"
@@ -323,7 +330,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-02-16 05:26:05"
+            "time": "2016-04-03 22:58:34"
         },
         {
             "name": "symfony/console",
@@ -331,12 +338,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "02930f823b232f4a6d7371464240896cca28560a"
+                "reference": "9a5aef5fc0d4eff86853d44202b02be8d5a20154"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/02930f823b232f4a6d7371464240896cca28560a",
-                "reference": "02930f823b232f4a6d7371464240896cca28560a",
+                "url": "https://api.github.com/repos/symfony/console/zipball/9a5aef5fc0d4eff86853d44202b02be8d5a20154",
+                "reference": "9a5aef5fc0d4eff86853d44202b02be8d5a20154",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +390,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-17 06:14:28"
+            "time": "2016-03-17 09:19:04"
         },
         {
             "name": "symfony/finder",
@@ -391,12 +398,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "43a0bde21f9f390131917b6202eb02b3fea1f799"
+                "reference": "c3e7b8a86d3044a3dff2cc5a89f2c523ccf0e0fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/43a0bde21f9f390131917b6202eb02b3fea1f799",
-                "reference": "43a0bde21f9f390131917b6202eb02b3fea1f799",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/c3e7b8a86d3044a3dff2cc5a89f2c523ccf0e0fb",
+                "reference": "c3e7b8a86d3044a3dff2cc5a89f2c523ccf0e0fb",
                 "shasum": ""
             },
             "require": {
@@ -432,7 +439,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-04 12:57:09"
+            "time": "2016-03-10 11:16:56"
         },
         {
             "name": "symfony/polyfill-mbstring",
