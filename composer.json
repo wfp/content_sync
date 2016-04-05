@@ -10,7 +10,10 @@
       "homepage": "http://otarza.space"
     }
   ],
-  "keywords": ["Drupal 8 Module", "WFP"],
+  "keywords": [
+    "Drupal 8 Module",
+    "WFP"
+  ],
   "license": "GPL-2.0+",
   "homepage": "https://github.com/wfp/content_sync",
   "minimum-stability": "dev",
@@ -19,6 +22,21 @@
     "andrewholgate/drupalstrict": "0.1.1",
     "sebastian/phpcpd": "2.0.2"
   },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "lucasdemarchi/codespell",
+        "version": "master",
+        "type": "phpcs-plugin",
+        "source": {
+          "url": "https://github.com/lucasdemarchi/codespell.git",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    }
+  ],
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=Drupal,DrupalPractice,DrupalStrict --extensions=php,module,install,profile,drush.inc,test,admin.inc,yml,js,css --report-width=4 --colors --ignore=vendor/ ./",
     "phpcpd": "./vendor/bin/phpcpd --names *.php,*.module,*.profile,*.install,*.drush.inc,*.test --min-lines 6 --min-tokens 10 --fuzzy --exclude=vendor ./",

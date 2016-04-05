@@ -24,13 +24,14 @@ abstract class AbstractExportCommand extends AbstractCommand implements ExportCo
   protected function configure() {
     parent::configure();
     $this->addOption('bundle', 'b', InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.bundle'));
+    $this->addOption('conditions', 'c', InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.conditions'));
   }
 
   /**
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->contentManager->exportContentToFolder($input->getArgument('folder'), $this->getEntityTypeId());
+    $this->contentManager->exportContentToFolder($input->getArgument('folder'), $this->getEntityTypeId(), $input->getOption('conditions'));
     $output->writeln("Content exported to " . $input->getArgument('folder'), OutputInterface::OUTPUT_NORMAL);
   }
 

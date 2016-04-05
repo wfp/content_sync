@@ -6,5 +6,7 @@ command:
             description: 'Export entities given a filesystem location as "{root}/{entity_type}/{entity_bundle}".'
             options:
                 bundle: 'Export only entities of specified bundle (optional).'
+                conditions: 'Argument for storage condition in following format "field_name,value,operator,langcode"'
+
         import:
             description: 'Import content given from a given filesystem location.'

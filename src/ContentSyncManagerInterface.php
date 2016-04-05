@@ -36,6 +36,6 @@ interface ContentSyncManagerInterface {
    * @return array[][]
    *    Array of exported serialized entities, keyed by entity type ID and UUID.
    */
-  public function exportContentToFolder($folder, $entity_type_id);
+  public function exportContentToFolder($folder, $entity_type_id, $conditions);
 
 }
