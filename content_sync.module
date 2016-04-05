@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Contains content_sync.module..
+ */
+
+/**
  * Implements hook_ENTITY_TYPE_storage_load().
  */
 function content_sync_taxonomy_term_storage_load(array $entities) {

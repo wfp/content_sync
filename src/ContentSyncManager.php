@@ -33,10 +33,10 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
   /**
    * {@inheritdoc}
    */
-  public function exportContentToFolder($folder, $entity_type_id, $conditions_string) {
+  public function exportContentToFolder($folder, $entity_type_id, $conditions = NULL) {
     $condition = NULL;
-    if ($conditions_string) {
-      $condition = $this->getConditionInstanceFromConditionsString($conditions_string);
+    if ($conditions) {
+      $condition = $this->getConditionInstanceFromConditionsString($conditions);
     }
 
     $serialized_by_type = $this->getSerializedEntities($entity_type_id, $condition);
@@ -53,20 +53,22 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     return $serialized_by_type;
   }
 
+
   /**
    * Parse condition argument.
    *
-   * @param string $conditions_string
+   * @param string $conditions
    *    Condition string.
    *
    * @return \Drupal\content_sync\Condition
    *    Condition instance derived from condition string.
    */
-  public function getConditionInstanceFromConditionsString($conditions_string) {
-    $values = explode(',', $conditions_string);
+  public function getConditionInstanceFromConditionsString($conditions) {
+    $values    = explode(',', $conditions);
     $condition = new \Drupal\content_sync\Condition($values[0], $values[1], $values[2], $values[3]);
     return $condition;
   }
+
 
   /**
    * Return serialized entities, along with their references.
@@ -74,7 +76,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
    * @param string $entity_type_id
    *    Entity type ID.
    * @param object $condition
-   *   of Drupal\content_sync\Condition objects.
+   *    of Drupal\content_sync\Condition objects.
    *    Instance of Drupal\content_sync\Condition objects.
    *
    * @return array[][]
@@ -84,19 +86,21 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $return = [];
 
     if (empty($condition)) {
-      $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple();
+      $entities = $this->entityTypeManager->getStorage($entity_type_id)
+        ->loadMultiple();
     }
     else {
-      $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery();
+      $query = $this->entityTypeManager->getStorage($entity_type_id)
+        ->getQuery();
       $query->condition($condition->field, $condition->value, $condition->operator, $condition->langcode);
 
       $entities_ids = $query->execute();
-      $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple($entities_ids);
+      $entities     = $this->entityTypeManager->getStorage($entity_type_id)
+        ->loadMultiple($entities_ids);
     }
 
     foreach ($entities as $entity) {
-      foreach ($this->exportContentWithReferences($entity_type_id,
-        $entity->id()) as $type => $list) {
+      foreach ($this->exportContentWithReferences($entity_type_id, $entity->id()) as $type => $list) {
         foreach ($list as $uuid => $content) {
           $return[$type][$uuid] = $content;
         }
@@ -105,6 +109,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
 
     return $return;
   }
+
 
   /**
    * Return serialized entity bundle.
@@ -120,6 +125,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $parts = explode('/', $data['_links']['type']['href']);
     return array_pop($parts);
   }
+
 
   /**
    * Create entities given a pre-populated graph and file map.
@@ -147,8 +153,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
         $entity         = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
         $entity->enforceIsNew(TRUE);
         // Allow existing entities overwrite.
-        $existing_entity = $this->entityRepository->loadEntityByUuid($entity_type_id,
-          $entity->uuid());
+        $existing_entity = $this->entityRepository->loadEntityByUuid($entity_type_id, $entity->uuid());
         if ($update_existing && $existing_entity) {
           // Delete first an existing entity with the same uuid.
           $existing_entity->delete();
