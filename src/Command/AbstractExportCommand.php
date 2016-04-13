@@ -24,7 +24,7 @@ abstract class AbstractExportCommand extends AbstractCommand implements ExportCo
   protected function configure() {
     parent::configure();
     $this->addOption('bundle', 'b', InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.bundle'));
-    $this->addOption('conditions', 'c', InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.conditions'));
+    $this->addOption('conditions', NULL, InputOption::VALUE_OPTIONAL, $this->trans('command.content-sync.export.options.conditions'));
   }
 
   /**
