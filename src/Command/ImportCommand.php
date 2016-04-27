@@ -31,7 +31,7 @@ class ImportCommand extends AbstractCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->contentManager->importContentFromFolder($input->getArgument('folder'));
+    $this->contentManager->importContentFromFolder($input->getArgument('folder'), $input->getOption('update'));
     $output->writeln("Content imported from " . $input->getArgument('folder'), OutputInterface::OUTPUT_NORMAL);
   }
 
