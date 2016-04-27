@@ -8,6 +8,7 @@
 namespace Drupal\content_sync\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -23,6 +24,7 @@ class ImportCommand extends AbstractCommand {
   protected function configure() {
     parent::configure();
     $this->setName('content-sync:import')->setDescription($this->trans('command.content-sync.import.description'));
+    $this->addOption('update', 'u', InputOption::VALUE_NONE, $this->trans('command.content-sync.import.options.update'));
   }
 
   /**
