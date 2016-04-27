@@ -8,3 +8,5 @@ command:
                 bundle: 'Export only entities of specified bundle (optional).'
         import:
             description: 'Import content given from a given filesystem location.'
+            options:
+                update: 'Update existing entities (optional).'
