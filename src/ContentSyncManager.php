@@ -86,17 +86,14 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $return = [];
 
     if (empty($condition)) {
-      $entities = $this->entityTypeManager->getStorage($entity_type_id)
-        ->loadMultiple();
+      $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple();
     }
     else {
-      $query = $this->entityTypeManager->getStorage($entity_type_id)
-        ->getQuery();
+      $query = $this->entityManager->getStorage($entity_type_id)->getQuery();
       $query->condition($condition->field, $condition->value, $condition->operator, $condition->langcode);
 
       $entities_ids = $query->execute();
-      $entities     = $this->entityTypeManager->getStorage($entity_type_id)
-        ->loadMultiple($entities_ids);
+      $entities = $this->entityManager->getStorage($entity_type_id)->loadMultiple($entities_ids);
     }
 
     foreach ($entities as $entity) {
