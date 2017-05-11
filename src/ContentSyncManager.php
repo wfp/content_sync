@@ -7,9 +7,10 @@
 
 namespace Drupal\content_sync;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\default_content\DefaultContentManager;
 use Drupal\default_content\Event\DefaultContentEvents;
-use Drupal\default_content\Event\ImportFromFolderEvent;
+use Drupal\default_content\Event\ImportEvent;
 
 /**
  * Class ContentSyncManager.
@@ -22,11 +23,89 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
    * {@inheritdoc}
    */
   public function importContentFromFolder($folder, $update_existing = FALSE) {
-    // We fully scan the provided folder without discriminating per entity type.
-    $this->buildGraph($folder);
-    $entities = $this->createEntities($update_existing);
-    $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportFromFolderEvent($entities, $folder));
-    return $entities;
+
+    // @see \Drupal\default_content\DefaultContentManager::importContent()
+    $created = [];
+    if (file_exists($folder)) {
+      $file_map = array();
+      foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+        $reflection = new \ReflectionClass($entity_type->getClass());
+        // We are only interested in importing content entities.
+        if ($reflection->implementsInterface('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+          continue;
+        }
+        if (!file_exists($folder . '/' . $entity_type_id)) {
+          continue;
+        }
+        $files = $this->scanner()->scan($folder . '/' . $entity_type_id);
+        // Default content uses drupal.org as domain.
+        // @todo Make this use a uri like default-content:.
+        $this->linkManager->setLinkDomain(static::LINK_DOMAIN);
+        // Parse all of the files and sort them in order of dependency.
+        foreach ($files as $file) {
+          $contents = $this->parseFile($file);
+          // Decode the file contents.
+          $decoded = $this->serializer->decode($contents, 'hal_json');
+          // Get the link to this entity.
+          $item_uuid = $decoded['uuid'][0]['value'];
+
+          // Throw an exception when this UUID already exists.
+          if (isset($file_map[$item_uuid])) {
+            $args = array(
+              '@uuid' => $item_uuid,
+              '@first' => $file_map[$item_uuid]->uri,
+              '@second' => $file->uri,
+            );
+            // Reset link domain.
+            $this->linkManager->setLinkDomain(FALSE);
+            throw new \Exception(new FormattableMarkup('Default content with uuid @uuid exists twice: @first @second', $args));
+          }
+
+          // Store the entity type with the file.
+          $file->entity_type_id = $entity_type_id;
+          // Store the file in the file map.
+          $file_map[$item_uuid] = $file;
+          // Create a vertex for the graph.
+          $vertex = $this->getVertex($item_uuid);
+          $this->graph[$vertex->id]['edges'] = [];
+          if (empty($decoded['_embedded'])) {
+            // No dependencies to resolve.
+            continue;
+          }
+          // Here we need to resolve our dependencies:
+          foreach ($decoded['_embedded'] as $embedded) {
+            foreach ($embedded as $item) {
+              $uuid = $item['uuid'][0]['value'];
+              $edge = $this->getVertex($uuid);
+              $this->graph[$vertex->id]['edges'][$edge->id] = TRUE;
+            }
+          }
+        }
+      }
+
+      // @todo what if no dependencies?
+      $sorted = $this->sortTree($this->graph);
+      foreach ($sorted as $link => $details) {
+        if (!empty($file_map[$link])) {
+          $file = $file_map[$link];
+          $entity_type_id = $file->entity_type_id;
+          $resource = $this->resourcePluginManager->getInstance(array('id' => 'entity:' . $entity_type_id));
+          $definition = $resource->getPluginDefinition();
+          $contents = $this->parseFile($file);
+          $class = $definition['serialization_class'];
+          $entity = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
+          $entity->enforceIsNew(TRUE);
+          $entity->save();
+          $created[$entity->uuid()] = $entity;
+        }
+      }
+      $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportEvent($created, 'content_sync'));
+    }
+    // Reset the tree.
+    $this->resetTree();
+    // Reset link domain.
+    $this->linkManager->setLinkDomain(FALSE);
+    return $created;
   }
 
 
@@ -121,53 +200,6 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
     $data  = $this->serializer->decode($serialized_entity, 'hal_json');
     $parts = explode('/', $data['_links']['type']['href']);
     return array_pop($parts);
-  }
-
-
-  /**
-   * Create entities given a pre-populated graph and file map.
-   *
-   * @param bool $update_existing
-   *    Replace existing entities if TRUE.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
-   *    List of created entities.
-   *
-   * @link https://www.drupal.org/node/2640734#comment-10699416
-   */
-  public function createEntities($update_existing = FALSE) {
-    $created = array();
-
-    $sorted = $this->sortTree($this->graph);
-    foreach ($sorted as $link => $details) {
-      if (!empty($this->fileMap[$link])) {
-        $file           = $this->fileMap[$link];
-        $entity_type_id = $file->entity_type_id;
-        $resource       = $this->resourcePluginManager->getInstance(array('id' => 'entity:' . $entity_type_id));
-        $definition     = $resource->getPluginDefinition();
-        $contents       = $this->parseFile($file);
-        $class          = $definition['serialization_class'];
-        $entity         = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
-        $entity->enforceIsNew(TRUE);
-        // Allow existing entities overwrite.
-        $existing_entity = $this->entityRepository->loadEntityByUuid($entity_type_id, $entity->uuid());
-        if ($update_existing && $existing_entity) {
-          // Delete first an existing entity with the same uuid.
-          $existing_entity->delete();
-        }
-
-        if (!$existing_entity || $update_existing) {
-          $entity->save();
-          $created[$entity->uuid()] = $entity;
-        }
-      }
-    }
-
-    // Reset the tree.
-    $this->resetTree();
-    // Reset link domain.
-    $this->linkManager->setLinkDomain(FALSE);
-    return $created;
   }
 
 }

@@ -17,6 +17,9 @@
   "license": "GPL-2.0+",
   "homepage": "https://github.com/wfp/content_sync",
   "minimum-stability": "dev",
+  "require": {
+    "drupal/default_content": "1.0-alpha5"
+  },
   "require-dev": {
     "drupal/coder": "8.2.5",
     "andrewholgate/drupalstrict": "0.1.1",
