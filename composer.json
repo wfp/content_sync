@@ -1,6 +1,5 @@
 {
   "name": "wfp/content_sync",
-  "version": "0.0.1",
   "type": "drupal-module",
   "description": "Tool for syncing entities",
   "authors": [
