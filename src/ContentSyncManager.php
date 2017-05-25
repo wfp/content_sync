@@ -22,7 +22,7 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
   /**
    * {@inheritdoc}
    */
-  public function importContentFromFolder($folder, $update_existing = FALSE) {
+  public function importContentFromFolder($folder) {
 
     // @see \Drupal\default_content\DefaultContentManager::importContent()
     $created = [];
@@ -94,9 +94,12 @@ class ContentSyncManager extends DefaultContentManager implements ContentSyncMan
           $contents = $this->parseFile($file);
           $class = $definition['serialization_class'];
           $entity = $this->serializer->deserialize($contents, $class, 'hal_json', array('request_method' => 'POST'));
-          $entity->enforceIsNew(TRUE);
-          $entity->save();
-          $created[$entity->uuid()] = $entity;
+          // Only import non-existing entities.
+          if (entity_load($entity_type_id, $entity->id()) === NULL) {
+            $entity->enforceIsNew(TRUE);
+            $entity->save();
+            $created[$entity->uuid()] = $entity;
+          }
         }
       }
       $this->eventDispatcher->dispatch(DefaultContentEvents::IMPORT, new ImportEvent($created, 'content_sync'));

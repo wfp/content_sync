@@ -23,7 +23,7 @@ interface ContentSyncManagerInterface {
    * @return \Drupal\Core\Entity\EntityInterface[]
    *    Array of created entities.
    */
-  public function importContentFromFolder($folder, $update_existing = FALSE);
+  public function importContentFromFolder($folder);
 
   /**
    * Export all content of specified type, including its with related content.
