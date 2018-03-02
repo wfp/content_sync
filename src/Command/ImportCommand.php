@@ -7,6 +7,8 @@
 
 namespace Drupal\content_sync\Command;
 
+use Drupal\Console\Annotations\DrupalCommand;
+use Drupal\Console\Core\Command\Shared\ContainerAwareCommandTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,7 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class ImportCommand.
  *
- * @package Drupal\content_sync
+ * @DrupalCommand (
+ *     extension="content_sync",
+ *     extensionType="module"
+ * )
  */
 class ImportCommand extends AbstractCommand {
 
@@ -23,7 +28,8 @@ class ImportCommand extends AbstractCommand {
    */
   protected function configure() {
     parent::configure();
-    $this->setName('content-sync:import')->setDescription($this->trans('command.content-sync.import.description'));
+    $this->setName('content-sync:import')
+      ->setDescription($this->trans('command.content-sync.import.description'));
     $this->addOption('update', 'u', InputOption::VALUE_NONE, $this->trans('command.content-sync.import.options.update'));
   }
 
@@ -31,7 +37,7 @@ class ImportCommand extends AbstractCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->contentManager->importContentFromFolder($input->getArgument('folder'), $input->getOption('update'));
+    $this->getContentManager()->importContentFromFolder($input->getArgument('folder'), $input->getOption('update'));
     $output->writeln("Content imported from " . $input->getArgument('folder'), OutputInterface::OUTPUT_NORMAL);
   }
 

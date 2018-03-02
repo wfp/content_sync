@@ -7,7 +7,8 @@
 
 namespace Drupal\content_sync\Command;
 
-use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Console\Core\Command\Shared\ContainerAwareCommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -15,7 +16,9 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * @package Drupal\content_sync\Command
  */
-abstract class AbstractCommand extends ContainerAwareCommand {
+abstract class AbstractCommand extends Command {
+
+  use ContainerAwareCommandTrait;
 
   /**
    * Content manager service.
@@ -28,8 +31,15 @@ abstract class AbstractCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function configure() {
-    $this->contentManager = $this->getService('content_sync.manager');
     $this->addArgument('folder', InputArgument::REQUIRED, $this->trans('command.content-sync.arguments.folder'));
+  }
+
+  /**
+   * @return \Drupal\content_sync\ContentSyncManagerInterface
+   */
+  protected function getContentManager() {
+    $this->contentManager = $this->get('content_sync.manager');
+    return $this->contentManager;
   }
 
 }

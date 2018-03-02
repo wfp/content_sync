@@ -1,0 +1,6 @@
+services:
+  content_sync.import:
+    class: Drupal\content_sync\Command\ImportCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }

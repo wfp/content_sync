@@ -31,7 +31,7 @@ abstract class AbstractExportCommand extends AbstractCommand implements ExportCo
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->contentManager->exportContentToFolder($input->getArgument('folder'), $this->getEntityTypeId(), $input->getOption('conditions'));
+    $this->getContentManager()->exportContentToFolder($input->getArgument('folder'), $this->getEntityTypeId(), $input->getOption('conditions'));
     $output->writeln("Content exported to " . $input->getArgument('folder'), OutputInterface::OUTPUT_NORMAL);
   }
 
